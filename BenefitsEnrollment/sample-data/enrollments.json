@@ -1,0 +1,17 @@
+[
+  {
+    "id": 3001,
+    "employeeId": 1001,
+    "planId": 2001
+  },
+  {
+    "id": 3002,
+    "employeeId": 1001,
+    "planId": 2002
+  },
+  {
+    "id": 3003,
+    "employeeId": 1002,
+    "planId": 2003
+  }
+]

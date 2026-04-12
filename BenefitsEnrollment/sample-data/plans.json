@@ -1,0 +1,20 @@
+[
+  {
+    "id": 2001,
+    "name": "Gold Medical",
+    "type": "MEDICAL",
+    "cost": 250.00
+  },
+  {
+    "id": 2002,
+    "name": "Vision Plus",
+    "type": "VISION",
+    "cost": 40.00
+  },
+  {
+    "id": 2003,
+    "name": "Dental Care",
+    "type": "DENTAL",
+    "cost": 60.00
+  }
+]
