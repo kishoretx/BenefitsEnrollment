@@ -40,6 +40,7 @@ public class WebController {
         if (uri.contains("/employees")) return "employees";
         if (uri.contains("/plans")) return "plans";
         if (uri.contains("/enrollments")) return "enrollments";
+        if (uri.contains("/health")) return "health";
         return "";
     }
 

@@ -14,4 +14,8 @@ public interface EmployeeStore {
     List<Employee> findAll();
 
     void deleteById(Long id);
+
+    default long count() {
+        return findAll().size();
+    }
 }

@@ -16,4 +16,8 @@ public interface PlanStore {
     List<Plan> findAll();
 
     void deleteById(Long id);
+
+    default long count() {
+        return findAll().size();
+    }
 }

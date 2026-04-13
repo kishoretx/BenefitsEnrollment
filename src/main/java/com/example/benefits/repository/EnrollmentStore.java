@@ -24,4 +24,8 @@ public interface EnrollmentStore {
     void deleteByEmployeeId(Long employeeId);
 
     void deleteByPlanId(Long planId);
+
+    default long count() {
+        return findAll().size();
+    }
 }

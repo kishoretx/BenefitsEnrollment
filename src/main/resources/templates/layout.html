@@ -217,6 +217,7 @@
                 <a th:href="@{/ui/employees}" th:classappend="${activeTab == 'employees'} ? 'active' : ''">Employees</a>
                 <a th:href="@{/ui/plans}" th:classappend="${activeTab == 'plans'} ? 'active' : ''">Plans</a>
                 <a th:href="@{/ui/enrollments}" th:classappend="${activeTab == 'enrollments'} ? 'active' : ''">Enrollments</a>
+                <a th:href="@{/ui/health}" th:classappend="${activeTab == 'health'} ? 'active' : ''">Health</a>
             </nav>
         </header>
         <main th:replace="${content}"></main>
