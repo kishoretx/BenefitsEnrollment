@@ -153,6 +153,10 @@ You can also switch the default in [application.yml](/Users/kishorekumar/INTELLI
 - `PUT /enrollments/{id}`
 - `DELETE /enrollments/{id}`
 
+## Access UI
+```bash
+ http://localhost:8080/
+```
 ## Pagination And Filtering
 
 Pagination uses:
