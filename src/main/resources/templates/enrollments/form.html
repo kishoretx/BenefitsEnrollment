@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Enrollment</title>
+</head>
+<body>
+    <div th:replace="~{layout :: layout ('Add Enrollment', ~{::main})}">
+        <main>
+            <h1>Add New Enrollment</h1>
+            
+            <form th:action="@{/ui/enrollments}" th:object="${enrollment}" method="post">
+                
+                <div class="form-group">
+                    <label for="employeeId">Employee *</label>
+                    <select id="employeeId" th:field="*{employeeId}" required>
+                        <option value="">Select Employee</option>
+                        <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.name}"></option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('employeeId')}" th:errors="*{employeeId}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="planId">Plan *</label>
+                    <select id="planId" th:field="*{planId}" required>
+                        <option value="">Select Plan</option>
+                        <option th:each="p : ${plans}" th:value="${p.id}" th:text="${p.name}"></option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('planId')}" th:errors="*{planId}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="enrollmentDate">Enrollment Date *</label>
+                    <input type="date" id="enrollmentDate" th:field="*{enrollmentDate}" required>
+                    <span class="error" th:if="${#fields.hasErrors('enrollmentDate')}" th:errors="*{enrollmentDate}"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Enrollment</button>
+                    <a th:href="@{/ui/enrollments}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

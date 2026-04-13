@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employees</title>
+</head>
+<body>
+    <div th:replace="~{layout :: layout ('Employees', ~{::main})}">
+        <main>
+            <h1>Employees</h1>
+            
+            <div class="actions">
+                <a th:href="@{/ui/employees/new}" class="btn btn-primary">+ Add Employee</a>
+            </div>
+            
+            <form class="filters" method="get" th:action="@{/ui/employees}">
+                <div class="filter-group">
+                    <label>Name</label>
+                    <input type="text" name="name" th:value="${nameFilter}" placeholder="Search by name...">
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All Statuses</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == statusFilter}"></option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                    <a th:href="@{/ui/employees}" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="emp : ${employees}" th:if="${#lists.isEmpty(employees)} == false">
+                        <td th:text="${emp.id}">1</td>
+                        <td th:text="${emp.name}">John Doe</td>
+                        <td>
+                            <span class="badge" 
+                                  th:classappend="${emp.status.name() == 'ACTIVE'} ? 'badge-success' : 
+                                                  (${emp.status.name() == 'INACTIVE'} ? 'badge-warning' : 'badge-danger')"
+                                  th:text="${emp.status}">ACTIVE</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/ui/employees/{id}/edit(id=${emp.id})}" class="btn btn-secondary" style="padding: 6px 12px;">Edit</a>
+                            <form th:action="@{/ui/employees/{id}/delete(id=${emp.id})}" method="post" style="display: inline;"
+                                  onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(employees)}">
+                        <td colspan="4" style="text-align: center; color: #718096;">No employees found.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="pagination" th:if="${totalPages > 1}">
+                <a th:if="${page > 0}" th:href="@{/ui/employees(page=${page - 1}, size=${size}, status=${statusFilter}, name=${nameFilter})}">← Prev</a>
+                <span th:if="${page == 0}" class="disabled">← Prev</span>
+                
+                <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a th:href="@{/ui/employees(page=${i}, size=${size}, status=${statusFilter}, name=${nameFilter})}" 
+                       th:text="${i + 1}"
+                       th:classappend="${i == page} ? 'current' : ''">1</a>
+                </span>
+                
+                <a th:if="${page < totalPages - 1}" th:href="@{/ui/employees(page=${page + 1}, size=${size}, status=${statusFilter}, name=${nameFilter})}">Next →</a>
+                <span th:if="${page >= totalPages - 1}" class="disabled">Next →</span>
+            </div>
+            
+            <div style="margin-top: 20px; color: #718096; font-size: 14px;">
+                Showing <span th:text="${#lists.size(employees)}">0</span> of <span th:text="${totalElements}">0</span> employees
+            </div>
+        </main>
+    </div>
+</body>
+</html>

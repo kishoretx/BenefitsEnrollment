@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Employee</title>
+</head>
+<body>
+    <div th:replace="~{layout :: layout ('Add Employee', ~{::main})}">
+        <main>
+            <h1>Add New Employee</h1>
+            
+            <form th:action="@{/ui/employees}" th:object="${employee}" method="post">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" th:field="*{name}" required>
+                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" th:field="*{status}" required>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Employee</button>
+                    <a th:href="@{/ui/employees}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

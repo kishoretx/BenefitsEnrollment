@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Plan</title>
+</head>
+<body>
+    <div th:replace="~{layout :: layout ('Edit Plan', ~{::main})}">
+        <main>
+            <h1>Edit Plan</h1>
+            
+            <form th:action="@{/ui/plans/{id}(id=${plan.id})}" th:object="${plan}" method="post">
+                
+                <div class="form-group">
+                    <label>ID</label>
+                    <input type="text" th:value="${plan.id}" disabled>
+                </div>
+                
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" th:field="*{name}" required>
+                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="type">Type *</label>
+                    <select id="type" th:field="*{type}" required>
+                        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                    </select>
+                    <span class="error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cost">Cost *</label>
+                    <input type="number" id="cost" th:field="*{cost}" step="0.01" min="0" required>
+                    <span class="error" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Plan</button>
+                    <a th:href="@{/ui/plans}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
