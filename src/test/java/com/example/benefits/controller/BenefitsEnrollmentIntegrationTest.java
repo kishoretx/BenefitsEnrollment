@@ -119,6 +119,131 @@ class BenefitsEnrollmentIntegrationTest {
                 .andExpect(jsonPath("$.errorCode").value("EMPLOYEE_INACTIVE"));
     }
 
+    @Test
+    void shouldGetSingleEmployee() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+
+        mockMvc.perform(get("/employees/1001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1001))
+                .andExpect(jsonPath("$.name").value("Alice Johnson"))
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
+    }
+
+    @Test
+    void shouldUpdateEmployee() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+
+        mockMvc.perform(put("/employees/1001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Alice Smith",
+                                  "status": "INACTIVE"
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Alice Smith"))
+                .andExpect(jsonPath("$.status").value("INACTIVE"));
+    }
+
+    @Test
+    void shouldDeleteEmployee() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+
+        mockMvc.perform(delete("/employees/1001"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/employees/1001"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("EMPLOYEE_NOT_FOUND"));
+    }
+
+    @Test
+    void shouldGetPlansWithPagination() throws Exception {
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+        createPlan(2002, "Vision Plus", "VISION", 40.00);
+
+        mockMvc.perform(get("/plans")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.totalElements").value(2));
+    }
+
+    @Test
+    void shouldGetSinglePlan() throws Exception {
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+
+        mockMvc.perform(get("/plans/2001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2001))
+                .andExpect(jsonPath("$.name").value("Gold Medical"))
+                .andExpect(jsonPath("$.type").value("MEDICAL"))
+                .andExpect(jsonPath("$.cost").value(250.0));
+    }
+
+    @Test
+    void shouldGetEnrollmentsWithPagination() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+        createEnrollment(3001, 1001, 2001);
+
+        mockMvc.perform(get("/enrollments")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
+    void shouldGetSingleEnrollment() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+        createEnrollment(3001, 1001, 2001);
+
+        mockMvc.perform(get("/enrollments/3001"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(3001))
+                .andExpect(jsonPath("$.employeeId").value(1001))
+                .andExpect(jsonPath("$.planId").value(2001));
+    }
+
+    @Test
+    void shouldUpdateEnrollment() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+        createPlan(2002, "Vision Plus", "VISION", 40.00);
+        createEnrollment(3001, 1001, 2001);
+
+        mockMvc.perform(put("/enrollments/3001")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "employeeId": 1001,
+                                  "planId": 2002
+                                }
+                                """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.planId").value(2002));
+    }
+
+    @Test
+    void shouldDeleteEnrollment() throws Exception {
+        createEmployee(1001, "Alice Johnson", "ACTIVE");
+        createPlan(2001, "Gold Medical", "MEDICAL", 250.00);
+        createEnrollment(3001, 1001, 2001);
+
+        mockMvc.perform(delete("/enrollments/3001"))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/enrollments/3001"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("ENROLLMENT_NOT_FOUND"));
+    }
+
     private void createEmployee(long id, String name, String status) throws Exception {
         mockMvc.perform(post("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
